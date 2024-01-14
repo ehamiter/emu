@@ -28,13 +28,17 @@ The concept is you can use the option key (⌥) and letters that are easy to rec
 
 You can also surround words with brackets to denote the heading level:
 
-```[This is a level one header]```
-```[[[This is an H3]]]```
+```
+[This is a level one header]
+[[[This is an H3]]]
+```
 
 ...and curly brackets for blockquotes:
 
-```{This is a blockquote}```
-```{{This is a nested blockquote}}```
+```
+{This is a blockquote}
+{{This is a nested blockquote}}
+```
 
 This is what it looks like when you write it:
 
