@@ -135,6 +135,13 @@ def emu_to_html(emu_text):
     return html_output
 
 
+def minify_html(html_content):
+    # Simple minification: remove leading/trailing whitespaces and reduce multiple spaces to one
+    html_content = re.sub(r">\s+<", "><", html_content)  # Remove whitespace between HTML tags
+    html_content = re.sub(r"\s+", " ", html_content)    # Reduce multiple spaces to one
+    return html_content
+
+
 def main():
     if len(sys.argv) != 2:
         print("Usage: emu <filename.emu>")
@@ -147,9 +154,10 @@ def main():
         emu_content = file.read()
 
     html_content = emu_to_html(emu_content)
+    minified_html_content = minify_html(html_content)
 
     with open(html_filename, "w") as file:
-        file.write(html_content)
+        file.write(minified_html_content)
     print(f"Converted '{emu_filename}' to '{html_filename}'")
 
 
