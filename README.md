@@ -7,11 +7,11 @@
 
 The concept is you can use the option key (⌥) and letters that are easy to recall:
 
-| Key Combination | Symbol | Description                        | Example Usage                           |
-|-----------------|--------|------------------------------------|-----------------------------------------|
-| Option-B        | ∫      | Bold tagging                       | `∫bold text∫` → **bold text**           |
-| Option-I        | ˆ      | Italicized tagging                 | `ˆitalicized textˆ` → *italicized text* |
-| Option-L        | ¬      | Link tagging (with optional title) | `¬link text|url¬` → [link text](url)     |
+| Key Combination | Symbol | Description                        | Example Usage                                      |
+|-----------------|--------|------------------------------------|----------------------------------------------------|
+| Option-B        | ∫      | Bold tagging                       | `∫bold text∫` → **bold text**                      |
+| Option-I        | ˆ      | Italicized tagging                 | `ˆitalicized textˆ` → *italicized text*            |
+| Option-L        | ¬      | Link tagging (with optional title) | `¬link text|url¬` → [link text](url)               |
 |                 |        |                                    | `¬link text|url|title¬` → [link text](url "title") |
 
 
