@@ -1,5 +1,5 @@
 # [Emu rocks](https://emu.rocks)!<sup>*</sup>
-
+![An emu, rocking](emu.png)
 <sup>*</sup> It actually doesn't but that's ok
 
 
