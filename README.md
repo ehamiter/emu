@@ -5,6 +5,18 @@
 
 #### This is a dumb "language" and not useful. This is the disclaimer as well as the advertisement.
 
+Pros:
+  * It's free
+  * It has a funny bird for a mascot
+  * It's okay for writing something like a blog post that is very plain
+
+Cons:
+  * It's not very good
+  * There aren't really instructions on how to set it up
+  * It's not blazing fast
+  * Markdown is infinitely superior
+
+
 The concept is you can use the option key (⌥) and letters that are easy to recall:
 
 | Key Combination | Symbol | Description                        | Example Usage                                        |
