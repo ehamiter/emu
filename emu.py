@@ -141,7 +141,7 @@ def process_emu_line(line):
     line = re.sub(image_pattern, handle_image_tag, line)
 
     # Updated regex pattern for link tags - making it non-greedy
-    link_pattern = r"¬([^|]+?)\|([^|]+?)\|?(.*?)¬"
+    link_pattern = r"¬([^|]+)\|([^|]+)(?:\|([^¬]+))?¬"
     line = re.sub(link_pattern, handle_link_tag, line)
 
     line = re.sub(r"\∫(.+?)∫", r"<strong>\1</strong>", line)
@@ -184,17 +184,15 @@ def build_link_tag(link_text, url, title):
 
 
 def preprocess_url(url):
-    # Prepend 'https://' if not present and if it's a web URL
-    if not (
-        url.startswith(("http://", "https://")) or url.startswith(("/", "./", "../"))
-    ):
-        return "https://" + url
-    return url
+    # Check if the URL is already complete or is a relative path
+    if url.startswith(("http://", "https://", "/", "./", "../")):
+        return url
+    return "https://" + url
 
 
 def emu_to_html(emu_text):
     html_output = (
-        f'<html><head><meta charset="UTF-8"><style>{CSS_STYLES}</style></head><body>'
+        f'<html><head><title>Emu rocks!</title><meta charset="UTF-8"><style>{CSS_STYLES}</style></head><body>'
     )
     emu_text = convert_block_quotes(emu_text)
 

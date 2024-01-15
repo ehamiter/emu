@@ -4,12 +4,10 @@
 [[[Emu: Not Your Daddy's Markup Language]]
 Unless you are my son, then it ˆisˆ your markup language. Er, mine.
 
+[[[Ok.. What Is It, Then?]]]
+It's a stupidly opinionated html page generator that lets you write pages that look more or less ∫exactly like this one∫ by using a few common-sense tags.
+
 [[[We got GPTS For That]]]
-Learn more about ¬Eddie the Emu|https://chat.openai.com/g/g-2x5PhBpwM-eddie-the-emu|He's a GPT!¬ →
+Learn more about Emu ¬straight from the emu's mouth, Eddie|https://chat.openai.com/g/g-2x5PhBpwM-eddie-the-emu|He's a GPT!¬. He can help explain what Emu is, what it's useful for, how to hack on it, and so forth.
 
-Eddie can help explain what Emu is, what it's useful for, how to hack on it, and so forth.
-
-[[[Can You Just Tell Me What This Is For Pete's Sake]]]
-It's a stupidly opinionated html page generator that lets you write pages that look ˆexactly like this oneˆ by using a few common-sense tags.
-
-For more details ¬check out the GitHub repo|https://github.com/ehamiter/emu¬, or ¬ask Eddie all about it|https://chat.openai.com/g/g-2x5PhBpwM-eddie-the-emu¬.
+For more details or the source, ¬check out the GitHub repo|https://github.com/ehamiter/emu¬.
