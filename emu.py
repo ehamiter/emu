@@ -1,6 +1,7 @@
 import re
 import sys
 
+DEBUG_MODE = False
 
 # Make this be the default but be swappable with other styles
 CSS_STYLES = """
@@ -79,12 +80,12 @@ CSS_STYLES = """
     }
 """
 
-DEBUG_MODE = True  # Set to False to turn off debug prints
 
 def debug_print(*args, **kwargs):
     """Print debug messages only if DEBUG_MODE is True."""
     if DEBUG_MODE:
         print(*args, **kwargs)
+
 
 def header_replacer(match):
     # Count the number of opening brackets to determine header level
@@ -108,10 +109,10 @@ def convert_block_quotes(text):
 
 def handle_image_tag(match):
     url = preprocess_url(match.group(1).strip())
-    width = match.group(3).strip() + 'px' if match.group(3) else None
-    height = match.group(4).strip() + 'px' if match.group(4) else None
+    width = match.group(3).strip() + "px" if match.group(3) else None
+    height = match.group(4).strip() + "px" if match.group(4) else None
     alt_text = match.group(5).strip()
-    alignment_marker = match.group(6) or '<'
+    alignment_marker = match.group(6) or "<"
 
     alignment_style = get_alignment_style(alignment_marker)
     style_attr = build_style_string(alignment_style, width, height)
@@ -127,6 +128,7 @@ def handle_link_tag(match):
     title = match.group(3).strip() if match.group(3) else ""
 
     return f'<a href="{url}" title="{title}">{link_text}</a>'
+
 
 def process_emu_line(line):
     debug_print(f"Processing line: {line}")  # Conditional debug print
@@ -159,13 +161,14 @@ def get_alignment_style(alignment_marker):
         return "float: right;"
     return ""
 
+
 def build_style_string(alignment_style, width, height):
     style_parts = []
     if alignment_style:
         style_parts.append(alignment_style)
     if width and height:
-        style_parts.append(f'width: {width}; height: {height};')
-    style_string = ' '.join(style_parts)
+        style_parts.append(f"width: {width}; height: {height};")
+    style_string = " ".join(style_parts)
     debug_print(f"Style string: '{style_string}'")  # Debug print
     return style_string
 
@@ -191,9 +194,7 @@ def preprocess_url(url):
 
 
 def emu_to_html(emu_text):
-    html_output = (
-        f'<html><head><title>Emu rocks!</title><meta charset="UTF-8"><style>{CSS_STYLES}</style></head><body>'
-    )
+    html_output = f'<html><head><title>Emu rocks!</title><meta charset="UTF-8"><style>{CSS_STYLES}</style></head><body>'
     emu_text = convert_block_quotes(emu_text)
 
     # Split the text into lines and process each line
@@ -234,7 +235,7 @@ def main():
 
     with open(html_filename, "w") as file:
         file.write(minified_html_content)
-    debug_print(f"Converted '{emu_filename}' to '{html_filename}'")
+    print(f"Converted '{emu_filename}' to '{html_filename}'")
 
 
 if __name__ == "__main__":
