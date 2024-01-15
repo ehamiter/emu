@@ -52,7 +52,7 @@ This is what it looks like when you write it:
 ```
 [Emu rocks!]
 
-¬|./emu.png|300x300|A cartoon emu rocking out with a guitar|>¬
+¬|./emu.webp|300x300|A cartoon emu rocking out with a guitar|>¬
 
 [[[Emu: Not Your Daddy's Markup Language]]]
 Unless you are my son, then it ˆisˆ your markup language. Er, mine.
