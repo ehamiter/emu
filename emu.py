@@ -1,14 +1,16 @@
 import re
 import sys
 
+
+# Make this be the default but be swappable with other styles
 CSS_STYLES = """
     body {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
         margin: 5px auto;
         padding: 15px 30px;
         line-height: 1.25;
-        color: #333;
-        background-color: #fdfdfd;
+        color: #111;
+        background-color: #efefef;
         max-width: 800px;
     }
     blockquote {
@@ -69,15 +71,20 @@ CSS_STYLES = """
         margin-bottom: 0.25em;
     }
     img {
+        border: 10px solid white;
         max-width: 100%;
-        height: auto;
-        border: 2px solid rgba(0, 0, 0, 0.1);
-        border-radius: 5px;
-        display: block;
-        margin: 0 auto;
+        object-fit: cover;
+        height: 100%;
+        width: 95%;
     }
 """
 
+DEBUG_MODE = True  # Set to False to turn off debug prints
+
+def debug_print(*args, **kwargs):
+    """Print debug messages only if DEBUG_MODE is True."""
+    if DEBUG_MODE:
+        print(*args, **kwargs)
 
 def header_replacer(match):
     # Count the number of opening brackets to determine header level
@@ -85,6 +92,7 @@ def header_replacer(match):
     # Limit the header level to 6
     level = min(level, 6)
     return f"<h{level}>{match.group(2)}</h{level}>"
+
 
 def convert_block_quotes(text):
     while "{{" in text:
@@ -97,49 +105,97 @@ def convert_block_quotes(text):
     text = re.sub(r"\{(.*?)\}", r"<blockquote>\1</blockquote>", text, flags=re.DOTALL)
     return text
 
+
+def handle_image_tag(match):
+    url = preprocess_url(match.group(1).strip())
+    width = match.group(3).strip() + 'px' if match.group(3) else None
+    height = match.group(4).strip() + 'px' if match.group(4) else None
+    alt_text = match.group(5).strip()
+    alignment_marker = match.group(6) or '<'
+
+    alignment_style = get_alignment_style(alignment_marker)
+    style_attr = build_style_string(alignment_style, width, height)
+
+    img_tag = f'<img src="{url}" style="{style_attr}" alt="{alt_text}">'
+    debug_print(f"Image tag: '{img_tag}'")  # Debug print
+    return img_tag
+
+
+def handle_link_tag(match):
+    link_text = match.group(1).strip()
+    url = preprocess_url(match.group(2).strip())
+    title = match.group(3).strip() if match.group(3) else ""
+
+    return f'<a href="{url}" title="{title}">{link_text}</a>'
+
 def process_emu_line(line):
-    # Check if the line is empty and create a paragraph
+    debug_print(f"Processing line: {line}")  # Conditional debug print
+
     if not line.strip():
         return "<p></p>"
 
-    # headers
     line = re.sub(r"(\[+)([^\[\]]+?)\]+", header_replacer, line)
 
-    # option + keys
-    # links (l) - Matches both text and image links
-    line = re.sub(r"¬([^|]*?)\|([^|]+?)(?:\|([^|x]+?)x([^|]+?))?(?:\|([^¬]+?))?¬", link_replacer, line)
+    # Updated regex pattern for image tags
+    image_pattern = r"¬\|([^|]+?)\|?(([^|]*?)x([^|]*?))?\|([^|]*?)\|?([<^>])?¬"
+    line = re.sub(image_pattern, handle_image_tag, line)
 
-    # bold (b)
+    # Updated regex pattern for link tags - making it non-greedy
+    link_pattern = r"¬([^|]+?)\|([^|]+?)\|?(.*?)¬"
+    line = re.sub(link_pattern, handle_link_tag, line)
+
     line = re.sub(r"\∫(.+?)∫", r"<strong>\1</strong>", line)
-    # italic (i)
     line = re.sub(r"\ˆ(.+?)ˆ", r"<em>\1</em>", line)
 
     return line
 
-def link_replacer(match):
-    link_text = match.group(1).strip()
-    url = match.group(2).strip()
-    width = match.group(3).strip() if match.group(3) else None
-    height = match.group(4).strip() if match.group(4) else None
-    alt_text = match.group(5).strip() if match.group(5) else ""
 
-    # Prepend 'https://' if not present and if it's a web URL
-    if url and not (url.startswith(("http://", "https://")) or url.startswith(("/", "./", "../"))):
-        url = "https://" + url
+def get_alignment_style(alignment_marker):
+    if alignment_marker == "^":
+        return "display: block; margin-left: auto; margin-right: auto;"
+    elif alignment_marker == "<":
+        return "float: left;"
+    elif alignment_marker == ">":
+        return "float: right;"
+    return ""
 
-    # If the link text is empty, treat it as an image link
-    if not link_text:
-        size_attr = f' width="{width}" height="{height}"' if width and height else ""
-        alt_attr = f' alt="{alt_text}"' if alt_text else ""
-        return f'<img src="{url}"{size_attr}{alt_attr}>'
+def build_style_string(alignment_style, width, height):
+    style_parts = []
+    if alignment_style:
+        style_parts.append(alignment_style)
+    if width and height:
+        style_parts.append(f'width: {width}; height: {height};')
+    style_string = ' '.join(style_parts)
+    debug_print(f"Style string: '{style_string}'")  # Debug print
+    return style_string
 
-    # For normal text links
-    title_attr = f' title="{alt_text}"' if alt_text else ""
+
+def build_image_tag(url, alignment_marker, width, height, alt_text):
+    alignment_style = get_alignment_style(alignment_marker)
+    style_attr = build_style_string(alignment_style, width, height)
+    img_tag = f'<img src="{url}" style="{style_attr}" alt="{alt_text}">'
+    debug_print(f"Image tag: '{img_tag}'")  # Debug print
+    return img_tag
+
+
+def build_link_tag(link_text, url, title):
+    title_attr = f' title="{title}"' if title else ""
     return f'<a href="{url}"{title_attr}>{link_text}</a>'
 
 
+def preprocess_url(url):
+    # Prepend 'https://' if not present and if it's a web URL
+    if not (
+        url.startswith(("http://", "https://")) or url.startswith(("/", "./", "../"))
+    ):
+        return "https://" + url
+    return url
+
+
 def emu_to_html(emu_text):
-    html_output = f"<html><head><style>{CSS_STYLES}</style></head><body>"
+    html_output = (
+        f'<html><head><meta charset="UTF-8"><style>{CSS_STYLES}</style></head><body>'
+    )
     emu_text = convert_block_quotes(emu_text)
 
     # Split the text into lines and process each line
@@ -157,14 +213,16 @@ def emu_to_html(emu_text):
 
 def minify_html(html_content):
     # Simple minification: remove leading/trailing whitespaces and reduce multiple spaces to one
-    html_content = re.sub(r">\s+<", "><", html_content)  # Remove whitespace between HTML tags
-    html_content = re.sub(r"\s+", " ", html_content)    # Reduce multiple spaces to one
+    html_content = re.sub(
+        r">\s+<", "><", html_content
+    )  # Remove whitespace between HTML tags
+    html_content = re.sub(r"\s+", " ", html_content)  # Reduce multiple spaces to one
     return html_content
 
 
 def main():
     if len(sys.argv) != 2:
-        print("Usage: emu <filename.emu>")
+        debug_print("Usage: emu <filename.emu>")
         sys.exit(1)
 
     emu_filename = sys.argv[1]
@@ -178,7 +236,7 @@ def main():
 
     with open(html_filename, "w") as file:
         file.write(minified_html_content)
-    print(f"Converted '{emu_filename}' to '{html_filename}'")
+    debug_print(f"Converted '{emu_filename}' to '{html_filename}'")
 
 
 if __name__ == "__main__":
