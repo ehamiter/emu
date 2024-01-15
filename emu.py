@@ -10,7 +10,6 @@ CSS_STYLES = """
         color: #333;
         background-color: #fdfdfd;
         max-width: 800px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
     blockquote {
         margin: 0 0 0 5px;
@@ -41,7 +40,7 @@ CSS_STYLES = """
         line-height: 1.25;
         color: #333;
     }
-    h1 { font-size: 2em; }
+    h1 { font-size: 2.5em; text-align: center;}
     h2 { font-size: 1.75em; }
     h3 { font-size: 1.5em; }
     h4 { font-size: 1.25em; }
@@ -66,7 +65,16 @@ CSS_STYLES = """
         margin-bottom: 0.5em;
         padding-left: 20px;
     }
-    li { margin-bottom: 0.25em;
+    li {
+        margin-bottom: 0.25em;
+    }
+    img {
+        max-width: 100%;
+        height: auto;
+        border: 2px solid rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+        display: block;
+        margin: 0 auto;
     }
 """
 
@@ -77,22 +85,6 @@ def header_replacer(match):
     # Limit the header level to 6
     level = min(level, 6)
     return f"<h{level}>{match.group(2)}</h{level}>"
-
-
-def link_replacer(match):
-    link_text = match.group(1)
-    url = match.group(2)
-    title = match.group(3)
-
-    # Prepend 'https://' if not present
-    if not url.startswith(("http://", "https://")):
-        url = "https://" + url
-
-    # Include title if provided
-    title_attr = f' title="{title}"' if title else ""
-
-    return f'<a href="{url}"{title_attr}>{link_text}</a>'
-
 
 def convert_block_quotes(text):
     while "{{" in text:
@@ -105,17 +97,45 @@ def convert_block_quotes(text):
     text = re.sub(r"\{(.*?)\}", r"<blockquote>\1</blockquote>", text, flags=re.DOTALL)
     return text
 
-
 def process_emu_line(line):
     # Check if the line is empty and create a paragraph
     if not line.strip():
         return "<p></p>"
-    # Process headers, links, bold, and italic
+
+    # headers
     line = re.sub(r"(\[+)([^\[\]]+?)\]+", header_replacer, line)
-    line = re.sub(r"¬(.+?)\|(.+?)(?:\|(.+?))?¬", link_replacer, line)
-    line = re.sub(r"\∫(.+?)\∫", r"<strong>\1</strong>", line)
-    line = re.sub(r"\ˆ(.+?)\ˆ", r"<em>\1</em>", line)
+
+    # option + keys
+    # links (l) - Matches both text and image links
+    line = re.sub(r"¬([^|]*?)\|([^|]+?)(?:\|([^|x]+?)x([^|]+?))?(?:\|([^¬]+?))?¬", link_replacer, line)
+
+    # bold (b)
+    line = re.sub(r"\∫(.+?)∫", r"<strong>\1</strong>", line)
+    # italic (i)
+    line = re.sub(r"\ˆ(.+?)ˆ", r"<em>\1</em>", line)
+
     return line
+
+def link_replacer(match):
+    link_text = match.group(1).strip()
+    url = match.group(2).strip()
+    width = match.group(3).strip() if match.group(3) else None
+    height = match.group(4).strip() if match.group(4) else None
+    alt_text = match.group(5).strip() if match.group(5) else ""
+
+    # Prepend 'https://' if not present and if it's a web URL
+    if url and not (url.startswith(("http://", "https://")) or url.startswith(("/", "./", "../"))):
+        url = "https://" + url
+
+    # If the link text is empty, treat it as an image link
+    if not link_text:
+        size_attr = f' width="{width}" height="{height}"' if width and height else ""
+        alt_attr = f' alt="{alt_text}"' if alt_text else ""
+        return f'<img src="{url}"{size_attr}{alt_attr}>'
+
+    # For normal text links
+    title_attr = f' title="{alt_text}"' if alt_text else ""
+    return f'<a href="{url}"{title_attr}>{link_text}</a>'
 
 
 def emu_to_html(emu_text):
