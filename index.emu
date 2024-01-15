@@ -5,9 +5,7 @@
 Unless you are my son, then it ˆisˆ your markup language. Er, mine.
 
 [[[Ok.. What Is It, Then?]]]
-It's a stupidly opinionated html page generator that lets you write pages that look more or less ∫exactly like this one∫ by using a few common-sense tags. View the source of this page.
+It's ¬a simple opinionated html page generator|https://github.com/ehamiter/emu¬ that lets you write pages that look more or less ∫exactly like this one∫ by using a few common-sense tags. ¬View the source of this page|https://raw.githubusercontent.com/ehamiter/emu/main/index.emu¬.
 
 [[[We got GPTS For That]]]
 Learn more about Emu ¬straight from the emu's mouth, Eddie|https://chat.openai.com/g/g-2x5PhBpwM-eddie-the-emu|He's a GPT!¬. He can help explain what Emu is, what it's useful for, how to hack on it, and so forth.
-
-For more details or the source, ¬check out the GitHub repo|https://github.com/ehamiter/emu¬.

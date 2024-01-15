@@ -123,12 +123,17 @@ def handle_image_tag(match):
 
 
 def handle_link_tag(match):
-    link_text = match.group(1).strip()
-    url = preprocess_url(match.group(2).strip())
+    debug_print(f"Link Match groups: {match.groups()}")  # Debug print
+
+    # Check if match groups are not None
+    link_text = match.group(1).strip() if match.group(1) else ""
+    url = preprocess_url(match.group(2).strip()) if match.group(2) else ""
     title = match.group(3).strip() if match.group(3) else ""
 
-    return f'<a href="{url}" title="{title}">{link_text}</a>'
+    output = f'<a href="{url}" title="{title}">{link_text}</a>'
+    debug_print(f"Link Output: '{output}'")  # Debug print
 
+    return output
 
 def process_emu_line(line):
     debug_print(f"Processing line: {line}")  # Conditional debug print
@@ -143,7 +148,7 @@ def process_emu_line(line):
     line = re.sub(image_pattern, handle_image_tag, line)
 
     # Updated regex pattern for link tags - making it non-greedy
-    link_pattern = r"¬([^|]+)\|([^|]+)(?:\|([^¬]+))?¬"
+    link_pattern = r"¬([^|]+)\|([^|]+?)(?:\|([^¬]+))?¬"
     line = re.sub(link_pattern, handle_link_tag, line)
 
     line = re.sub(r"\∫(.+?)∫", r"<strong>\1</strong>", line)
