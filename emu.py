@@ -15,7 +15,7 @@ CSS_STYLES = """
         max-width: 800px;
     }
     blockquote {
-        margin: 0 0 0 5px;
+        margin: 0;
         padding: 10px 20px;
         background-color: #f9f9f9;
         border-left: 5px solid #ccc;
