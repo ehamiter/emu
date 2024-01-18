@@ -26,11 +26,11 @@ The concept is you can use the option key (⌥) and letters that are easy to rec
 | Option-I        | ˆ      | Italicized tagging                  | `ˆitalicized textˆ` → *italicized text*              |
 | Option-L        | ¬      | Link tagging (with optional title)  | `¬link text\|url¬` → [link text](url)                |
 |                 |        |                                     | `¬link text\|url\|title¬` → [link text](url "title") |
-|                 |        | Image tagging (with optional title) | `¬\|url¬` → ![link text](url)                        |
-|                 |        |                                     | `¬\|url\|title¬` → ![link text](url "title")         |
-|                 |        | Image tagging placement (and title) | `¬\|url(\|title)\|^¬` → center aligned               |
-|                 |        |                                     | `¬\|url\|<¬` → left aligned                          |
-|                 |        |                                     | `¬\|url\|>¬` → right aligned                         |
+|                 |        | Image tagging (with optional title) | `¬\|url¬` → [image]                                  |
+|                 |        |                                     | `¬\|url\|title¬` → [image with ttitle]               |
+|                 |        | Image tagging placement (and title) | `¬\|url(\|title)\|^¬` → [center aligned image]       |
+|                 |        |                                     | `¬\|url\|<¬` → [left aligned image]                  |
+|                 |        |                                     | `¬\|url\|>¬` → [right aligned image]                 |
 
 You can also surround words with brackets to denote the heading level. Level one headers are centered.
 
