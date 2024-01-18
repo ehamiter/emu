@@ -135,6 +135,7 @@ def handle_link_tag(match):
 
     return output
 
+
 def process_emu_line(line):
     debug_print(f"Processing line: {line}")  # Conditional debug print
 
@@ -199,7 +200,10 @@ def preprocess_url(url):
 
 
 def emu_to_html(emu_text):
-    html_output = f'<html><head><title>Emu rocks!</title><meta charset="UTF-8"><style>{CSS_STYLES}</style></head><body>'
+    html_output = f"""
+        <html><head><meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Emu rocks!</title><meta charset="UTF-8"><style>{CSS_STYLES}</style></head><body>
+        """
     emu_text = convert_block_quotes(emu_text)
 
     # Split the text into lines and process each line
