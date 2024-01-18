@@ -33,7 +33,7 @@ You can also surround words with brackets to denote the heading level. Level one
 
 ```
 [This is a level one header]
-[[This is a level one header]]
+[[This is a level two header]]
 ...
 [[[[[[This is a level six header]]]]]]
 ```
