@@ -9,7 +9,7 @@ CSS_STYLES = """
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
         margin: 5px auto;
         padding: 15px 30px;
-        line-height: 1.25;
+        line-height: 1.5;
         color: #111;
         background-color: #efefef;
         max-width: 800px;
