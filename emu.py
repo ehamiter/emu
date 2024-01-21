@@ -26,11 +26,13 @@ CSS_STYLES = """
     }
     blockquote::before {
         content: '\\201C';
-        font-size: 4em;
+        font-family: serif;
+        font-size: 12em;
         color: #ccc;
         position: absolute;
         left: 10px;
-        top: -10px;
+        top: 0;
+        transform: translateY(-20%);
         opacity: 0.3;
     }
     blockquote.nested {
@@ -77,6 +79,11 @@ CSS_STYLES = """
         object-fit: cover;
         height: 100%;
         width: 95%;
+    }
+    @media (max-width: 600px) {
+        img {
+            margin: 1em;
+        }
     }
 """
 
