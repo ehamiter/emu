@@ -174,7 +174,7 @@
  [],
  False,
  False,
- 1706578834,
+ 1706583472,
  [('run',
    '/Users/eric/.virtualenvs/emu/lib/python3.11/site-packages/PyInstaller/bootloader/Darwin-64bit/run',
    'EXECUTABLE')],

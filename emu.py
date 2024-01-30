@@ -20,6 +20,7 @@ CSS_STYLES = """
         background-color: #f9f9f9;
         border-left: 5px solid #ccc;
         position: relative;
+        min-height: 2rem;
     }
     :not(blockquote) + blockquote {
         margin-top: 2rem;
