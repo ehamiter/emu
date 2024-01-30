@@ -85,6 +85,18 @@ CSS_STYLES = """
             margin: 1em;
         }
     }
+    pre.code {
+        font-family: 'SF Mono', 'Segoe UI Mono', 'Roboto Mono', Menlo, Courier, monospace;
+        background-color: #f0f7ff;  /* Subtle bluish background */
+        color: #333333;             /* Dark grey text for readability */
+        padding: 15px;              /* Adequate padding */
+        border-radius: 5px;         /* Rounded corners for a polished look */
+        border: 1px solid #d1e3f8;  /* Light border to define the element */
+        line-height: 1.5;           /* Line height for better readability */
+        white-space: pre-wrap;      /* Wrap long lines */
+        word-break: break-all;      /* Break words to prevent horizontal scrolling */
+        overflow-x: auto;           /* Horizontal scroll if needed */
+    }
 """
 
 
@@ -92,6 +104,16 @@ def debug_print(*args, **kwargs):
     """Print debug messages only if DEBUG_MODE is True."""
     if DEBUG_MODE:
         print(*args, **kwargs)
+
+
+def extract_title(text):
+    title_match = re.search(r"†(.*?)†", text)
+    if title_match:
+        title = title_match.group(1).strip()  # Extract the title
+        # Replace the title markup with an HTML comment
+        text = re.sub(r"†.*?†", f"<!-- Custom title: {title} -->", text, count=1)
+        return title, text
+    return "Emu rocks!", text  # Default title if no custom title is found
 
 
 def header_replacer(match):
@@ -112,6 +134,14 @@ def convert_block_quotes(text):
         )
     text = re.sub(r"\{(.*?)\}", r"<blockquote>\1</blockquote>", text, flags=re.DOTALL)
     return text
+
+
+def handle_code_block(text):
+    # Use a non-greedy regex to match content between two 'ç' symbols
+    code_block_pattern = r"ç(.*?)ç"
+    return re.sub(
+        code_block_pattern, r"<pre class='code'>\1</pre>", text, flags=re.DOTALL
+    )
 
 
 def handle_image_tag(match):
@@ -207,24 +237,61 @@ def preprocess_url(url):
 
 
 def emu_to_html(emu_text):
-    html_output = f"""
-        <html><head><meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Emu rocks!</title><meta charset="UTF-8"><style>{CSS_STYLES}</style></head><body>
-        """
+    # Step 1: Extract and replace code blocks
+    code_blocks = []
+
+    # def extract_code_block(match):
+    #     # Trim leading newlines and replace the rest with HTML line break tags
+    #     formatted_code = match.group(1).lstrip("\n").replace("\n", "<br>")
+    #     code_blocks.append(formatted_code)  # Store the formatted code block
+    #     return f"CODE_BLOCK_PLACEHOLDER_{len(code_blocks)-1}"  # Placeholder
+    def extract_code_block(match):
+        # Extract the code block and split into lines
+        code_lines = match.group(1).lstrip("\n").split("\n")
+        formatted_lines = []
+
+        for line in code_lines:
+            # Replace leading spaces with non-breaking spaces for indentation
+            leading_spaces = len(line) - len(line.lstrip(' '))
+            formatted_line = '&nbsp;' * leading_spaces + line.lstrip(' ')
+            formatted_lines.append(formatted_line)
+
+        formatted_code = "<br>".join(formatted_lines)
+        code_blocks.append(formatted_code)  # Store the formatted code block
+        return f"CODE_BLOCK_PLACEHOLDER_{len(code_blocks)-1}"  # Placeholder
+
+
+    emu_text = re.sub(r"ç(.*?)ç", extract_code_block, emu_text, flags=re.DOTALL)
+
+    # Extract title and update emu_text
+    title, emu_text = extract_title(emu_text)
+
+    # Process the rest of the document
     emu_text = convert_block_quotes(emu_text)
 
     # Split the text into lines and process each line
     lines = emu_text.split("\n")
     processed_lines = []
-    for i, line in enumerate(lines):
+    for line in lines:
         processed_line = process_emu_line(line)
-        # No need to add <br> tags as paragraphs are now handled
         processed_lines.append(processed_line)
 
-    html_output += "".join(processed_lines)
-    html_output += "</body></html>"
-    return html_output
+    # Reassemble the processed text
+    emu_text = "".join(processed_lines)
 
+    # Step 3: Reinsert code blocks
+    for i, code in enumerate(code_blocks):
+        placeholder = f"CODE_BLOCK_PLACEHOLDER_{i}"
+        emu_text = emu_text.replace(placeholder, f"<pre class='code'>{code}</pre>")
+
+    # Final HTML assembly
+    html_output = f"""
+        <html><head><meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{title}</title><meta charset="UTF-8"><style>{CSS_STYLES}</style></head><body>
+        {emu_text}
+        </body></html>
+    """
+    return html_output
 
 def minify_html(html_content):
     # Simple minification: remove leading/trailing whitespaces and reduce multiple spaces to one
