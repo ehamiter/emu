@@ -87,16 +87,14 @@ CSS_STYLES = """
         }
     }
     pre.code {
-        font-family: 'SF Mono', 'Segoe UI Mono', 'Roboto Mono', Menlo, Courier, monospace;
-        background-color: #f0f7ff;  /* Subtle bluish background */
-        color: #333333;             /* Dark grey text for readability */
-        padding: 15px;              /* Adequate padding */
-        border-radius: 5px;         /* Rounded corners for a polished look */
-        border: 1px solid #d1e3f8;  /* Light border to define the element */
-        line-height: 1.5;           /* Line height for better readability */
-        white-space: pre-wrap;      /* Wrap long lines */
-        word-break: break-all;      /* Break words to prevent horizontal scrolling */
-        overflow-x: auto;           /* Horizontal scroll if needed */
+        font-family: monospace;
+        background-color: #f0f7ff;
+        color: #333333;
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid #d1e3f8;
+        line-height: 1.5;
+        overflow-block: auto;
     }
 """
 
